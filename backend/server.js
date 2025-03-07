@@ -1,45 +1,38 @@
 const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 4000;
-// const userRouter = require('./routes/users');
+const userRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
 const subjectRouter = require("./routes/subjects");
 const taskRouter = require("./routes/tasks");
+const PORT = 4000;
 const mongoose = require("mongoose");
-const cors = require("cors");
 require("dotenv").config();
+const cors = require("cors");
 
-app.use(express.json()); //expressでjsonを使う
-app.use(cors()); //CORSを許可(フロントエンドとバックエンドの通信を許可)
-
-// Connect to MongoDB
-//.envファイルに記述したURLを読み込む
-mongoose
-  .connect(process.env.MONGODB_URL, {
-    useNewUrlParser: true,
+// ミドルウェアの設定
+app.use(express.json()); // JSON形式のデータを受け取る
+app.use(
+  // CORSを許可(フロントエンドとバックエンドの通信を許可)
+  cors({
+    origin: "http://localhost:3000", // フロントエンドの URL のみ許可
+    methods: "GET,POST,PUT,DELETE", // 許可する HTTP メソッド
   })
-  .then(() => console.log("888888888888888888888888888888"))
+);
+// ルーティングの設定
+app.use("/users", userRouter);
+app.use("/auth", authRouter);
+app.use("/subjects", subjectRouter);
+app.use("/tasks", taskRouter);
+
+// データベース接続
+mongoose
+  .connect(process.env.MONGODB_URL)
+  .then(() => {
+    console.log("データベースに接続しました");
+  })
   .catch((err) => {
-    console.log("エラーヨクキキトレマセンデシタ\n", err);
-    process.exit(1); // 接続に失敗した場合、プロセスを終了
+    console.log("データベースに接続失敗しました", err);
   });
 
-// Routesの読み込み　try-catchでエラーをキャッチ
-try {
-  // app.use('/users', userRouter);
-  app.use("/auth", authRouter);
-  app.use("/subjects", subjectRouter);
-  app.use("/tasks", taskRouter);
-} catch (err) {
-  console.log("ルートの読み込みエラー", err.message);
-}
-
-/*
-//テスト用
-app.get('/', (req, res) => {
-    res.send("ねむいっす");
-});
-*/
-
-// Serverを起動
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+// サーバー起動
+app.listen(PORT, () => console.log(`サーバーが起動しました ポート${PORT}`));
