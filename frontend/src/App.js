@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import HamburgerMenu from "./HamburgerMenu";
 import TaskCompletion from "./TaskCompletion";
 import TaskList from "./TaskList";
 import CalendarMenu from "./CalendarMenu";
 import LevelDisplay from "./LevelDisplay";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import "./App.css";
 
 function App() {
@@ -50,7 +50,7 @@ function App() {
 
       const res = await axios.post("http://localhost:4000/subjects", {
         name: subject.name,
-        date: subject.date || new Date().toISOString().split('T')[0]
+        date: subject.date || new Date().toISOString().split("T")[0],
       });
       setSubjects([...subjects, res.data]);
     } catch (err) {
@@ -76,8 +76,13 @@ function App() {
         console.error("エラー: タスクIDが取得できません");
         return;
       }
-      const res = await axios.put(`http://localhost:4000/tasks/${taskId}`, updatedTask);
-      setTasks((prev) => prev.map((task, index) => (index === taskIndex ? res.data : task)));
+      const res = await axios.put(
+        `http://localhost:4000/tasks/${taskId}`,
+        updatedTask
+      );
+      setTasks((prev) =>
+        prev.map((task, index) => (index === taskIndex ? res.data : task))
+      );
     } catch (err) {
       console.error("タスクの更新に失敗：", err.message);
     }
@@ -106,20 +111,25 @@ function App() {
       }
 
       const xpIncrement = (rating || 0) * task.priority * 5;
-      console.log(`XP計算式: (${rating} || 0) * ${task.priority} * 4 = ${xpIncrement}`);
+      console.log(
+        `XP計算式: (${rating} || 0) * ${task.priority} * 4 = ${xpIncrement}`
+      );
 
       const updatedTask = { ...task, completed: true, understanding: rating };
       await axios.put(`http://localhost:4000/tasks/${task._id}`, updatedTask);
 
       let subjectId = task.subjectId;
-      if (subjectId && typeof subjectId === 'object') {
+      if (subjectId && typeof subjectId === "object") {
         subjectId = subjectId._id; // オブジェクトの場合は_idフィールドを使用
       }
 
-      if (subjectId && typeof subjectId === 'string') {
-        const res = await axios.put(`http://localhost:4000/subjects/${subjectId}/increase-xp`, {
-          increment: xpIncrement,
-        });
+      if (subjectId && typeof subjectId === "string") {
+        const res = await axios.put(
+          `http://localhost:4000/subjects/${subjectId}/increase-xp`,
+          {
+            increment: xpIncrement,
+          }
+        );
 
         const updatedSubject = res.data;
         setXP((prevXP) => ({
@@ -130,7 +140,9 @@ function App() {
         console.error("エラー: subjectIdが無効です");
       }
 
-      setTasks((prev) => prev.map((t, index) => (index === taskIndex ? updatedTask : t)));
+      setTasks((prev) =>
+        prev.map((t, index) => (index === taskIndex ? updatedTask : t))
+      );
     } catch (err) {
       console.error("タスクの完了に失敗:", err.message);
     }
@@ -138,8 +150,11 @@ function App() {
 
   const editSubject = async (subjectId, updatedSubject) => {
     try {
-      await axios.put(`http://localhost:4000/subjects/${subjectId}`, updatedSubject);
-      const newSubjects = subjects.map(subject =>
+      await axios.put(
+        `http://localhost:4000/subjects/${subjectId}`,
+        updatedSubject
+      );
+      const newSubjects = subjects.map((subject) =>
         subject._id === subjectId ? { ...subject, ...updatedSubject } : subject
       );
       setSubjects(newSubjects);
@@ -158,7 +173,9 @@ function App() {
 
       //削除後のデータ取得
       await fetchTasks();
-      setSubjects((prevSubjects) => prevSubjects.filter(subject => subject._id !== subjectId));
+      setSubjects((prevSubjects) =>
+        prevSubjects.filter((subject) => subject._id !== subjectId)
+      );
       console.log(`教科 ${subjectId} と紐づいたタスクを削除しました`);
     } catch (err) {
       console.error("科目の削除に失敗：", err);
@@ -169,7 +186,7 @@ function App() {
   console.log("XP:", xp);
 
   return (
-    <Router>
+    <BrowserRouter>
       <div className="App">
         <HamburgerMenu
           subjects={subjects}
@@ -189,9 +206,24 @@ function App() {
         <Routes>
           <Route
             path="/task-completion"
-            element={<TaskCompletion tasks={tasks} updateTask={updateTask} deleteTask={deleteTask} />}
+            element={
+              <TaskCompletion
+                tasks={tasks}
+                updateTask={updateTask}
+                deleteTask={deleteTask}
+              />
+            }
           />
-          <Route path="/" element={<TaskList tasks={tasks} completeTask={completeTask} isMainView={true} />} />
+          <Route
+            path="/"
+            element={
+              <TaskList
+                tasks={tasks}
+                completeTask={completeTask}
+                isMainView={true}
+              />
+            }
+          />
         </Routes>
 
         <CalendarMenu subjects={subjects} />
@@ -200,7 +232,10 @@ function App() {
         <div className="level-display-container flex flex-wrap justify-center gap-4 p-4">
           {(showAll ? subjects : subjects.slice(0, 3)).map((subject) => (
             <div key={uuidv4()} className="min-w-[16rem] flex-shrink-0">
-              <LevelDisplay initialXp={xp[subject._id] || 0} subjectName={subject.name} />
+              <LevelDisplay
+                initialXp={xp[subject._id] || 0}
+                subjectName={subject.name}
+              />
             </div>
           ))}
         </div>
@@ -210,13 +245,14 @@ function App() {
           <div className="show-more-button-container">
             <button
               onClick={() => setShowAll(!showAll)}
-              className="btn btn-primary">
+              className="btn btn-primary"
+            >
               {showAll ? "隠す" : "もっと見る"}
             </button>
           </div>
         )}
       </div>
-    </Router>
+    </BrowserRouter>
   );
 }
 

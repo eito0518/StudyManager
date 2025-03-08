@@ -35,4 +35,4 @@ mongoose
   });
 
 // サーバー起動
-app.listen(PORT, () => console.log(`サーバーが起動しました ポート${PORT}`));
+app.listen(PORT, () => console.log(`PORT ${PORT} でサーバーが起動しました`));
