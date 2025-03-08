@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import axios from "axios";
-import HamburgerMenu from "./HamburgerMenu";
-import TaskCompletion from "./TaskCompletion";
-import TaskList from "./TaskList";
-import CalendarMenu from "./CalendarMenu";
-import LevelDisplay from "./LevelDisplay";
+import HamburgerMenu from "./components/HamburgerMenu";
+import TaskCompletion from "./components/TaskCompletion";
+import TaskList from "./components/TaskList";
+import CalendarMenu from "./components/CalendarMenu";
+import LevelDisplay from "./components/LevelDisplay";
 import { v4 as uuidv4 } from "uuid";
 import "./App.css";
 

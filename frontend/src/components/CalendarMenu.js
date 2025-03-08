@@ -5,9 +5,8 @@ import "./CalendarMenu.css";
 
 const CalendarMenu = ({ subjects }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState();
 
-  // カレンダーメニューの開閉処理
+  // カレンダーメニューの表示切り替え
   const toggleCalendarMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -25,7 +24,7 @@ const CalendarMenu = ({ subjects }) => {
   const renderTileContent = ({ date, view }) => {
     // 月表示モード かつ subjects が存在する場合のみ処理を実行
     if (view === "month" && subjects) {
-      // subjects からカレンダーのセルの日付と一致する教科を抽出
+      // subjects からカレンダーのセルの日付と一致する教科を取得
       const subjectsForTheMonth = subjects
         .filter(
           (subject) =>
@@ -40,7 +39,7 @@ const CalendarMenu = ({ subjects }) => {
               key={index}
               className="subject"
               style={{
-                // 色を順番に背景色を割り当てる
+                // 色を順番に教科に割り当てる
                 backgroundColor: subjectColors[index % subjectColors.length],
               }}
             >
@@ -67,8 +66,6 @@ const CalendarMenu = ({ subjects }) => {
           <div className="calendar-container">
             <h3 className="calendar-title">テスト日程</h3>
             <Calendar
-              value={selectedDate}
-              onClickDay={setSelectedDate}
               tileContent={renderTileContent}
               formatDay={(locale, date) => date.getDate()} // 日付を数字のみ表示
             />
