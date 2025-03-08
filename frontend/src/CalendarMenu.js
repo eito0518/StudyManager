@@ -4,15 +4,16 @@ import "react-calendar/dist/Calendar.css";
 import "./CalendarMenu.css";
 
 const CalendarMenu = ({ subjects }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [value, setValue] = useState();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState();
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
+  // カレンダーメニューの開閉処理
+  const toggleCalendarMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   // カレンダーの日付に表示する教科の色
-  const colors = [
+  const subjectColors = [
     "#FFD700", // ゴールド
     "#FF4500", // オレンジレッド
     "#1E90FF", // ドッジブルー
@@ -20,26 +21,30 @@ const CalendarMenu = ({ subjects }) => {
     "#9370DB", // ミディアムパープル
   ];
 
-  //カレンダーに科目名を表示するためのreact-calendarの関数
-  const tileContent = ({ date, view }) => {
+  // react-calendar の各タイルに表示する科目名を生成する関数
+  const renderTileContent = ({ date, view }) => {
+    // 月表示モード かつ subjects が存在する場合のみ処理を実行
     if (view === "month" && subjects) {
-      const subjectsForTheDay = subjects
+      // subjects からカレンダーのセルの日付と一致する教科を抽出
+      const subjectsForTheMonth = subjects
         .filter(
           (subject) =>
+            // 時刻情報を無視して比較
             new Date(subject.date).toDateString() === date.toDateString()
         )
-        .slice(0, 4); // 最大4つの教科を取得
+        .slice(0, 4); // 各セルにつき最大4つの教科を表示
       return (
         <div className="subjects">
-          {subjectsForTheDay.map((subject, index) => (
+          {subjectsForTheMonth.map((subject, index) => (
             <div
               key={index}
               className="subject"
               style={{
-                backgroundColor: colors[index % colors.length],
+                // 色を順番に背景色を割り当てる
+                backgroundColor: subjectColors[index % subjectColors.length],
               }}
             >
-              {subject.name}
+              {subject.name} {/* 教科名を表示 */}
             </div>
           ))}
         </div>
@@ -48,22 +53,23 @@ const CalendarMenu = ({ subjects }) => {
     return null;
   };
 
+  // カレンダーメニューの表示
   return (
     <>
-      <button className="hamburger-button-right" onClick={toggleMenu}>
+      <button className="hamburger-button-right" onClick={toggleCalendarMenu}>
         &#9776; {/*  HTMLエンティティ：ハンバーガーアイコン */}
       </button>
-      <div className={`menu-right ${isOpen ? "open-menu-right" : ""}`}>
-        <button className="close-button-right" onClick={toggleMenu}>
+      <div className={`menu-right ${isMenuOpen ? "open-menu-right" : ""}`}>
+        <button className="close-button-right" onClick={toggleCalendarMenu}>
           &times; {/* HTMLエンティティ：×ボタン */}
         </button>
         <div className="menu-content-right">
           <div className="calendar-container">
-            <h3 className="calendar-title">カレンダー</h3>
+            <h3 className="calendar-title">テスト日程</h3>
             <Calendar
-              value={value}
-              onClickDay={setValue}
-              tileContent={tileContent}
+              value={selectedDate}
+              onClickDay={setSelectedDate}
+              tileContent={renderTileContent}
               formatDay={(locale, date) => date.getDate()} // 日付を数字のみ表示
             />
           </div>
