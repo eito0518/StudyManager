@@ -10,6 +10,8 @@ import { v4 as uuidv4 } from "uuid";
 import "./App.css";
 
 function App() {
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
   const [subjects, setSubjects] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [xp, setXP] = useState({});
@@ -17,7 +19,7 @@ function App() {
 
   const fetchSubjects = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/subjects");
+      const res = await axios.get(`${API_BASE_URL}/subjects`);
       setSubjects(res.data);
 
       const initialXp = res.data.reduce((acc, subject) => {
@@ -32,7 +34,7 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/tasks");
+      const res = await axios.get(`${API_BASE_URL}/tasks`);
       setTasks(res.data);
     } catch (err) {
       console.error("タスクの取得に失敗：", err);
@@ -48,7 +50,7 @@ function App() {
     try {
       console.log("追加する科目：", subject);
 
-      const res = await axios.post("http://localhost:4000/subjects", {
+      const res = await axios.post(`${API_BASE_URL}/subjects`, {
         name: subject.name,
         date: subject.date || new Date().toISOString().split("T")[0],
       });
@@ -62,7 +64,7 @@ function App() {
     try {
       console.log("追加するタスク:", { subjectId, ...task });
       const newTask = { ...task, subjectId };
-      const res = await axios.post("http://localhost:4000/tasks", newTask);
+      const res = await axios.post(`${API_BASE_URL}/tasks`, newTask);
       setTasks((prev) => [...prev, res.data]);
     } catch (err) {
       console.error("タスクの追加に失敗:", err);
@@ -77,7 +79,7 @@ function App() {
         return;
       }
       const res = await axios.put(
-        `http://localhost:4000/tasks/${taskId}`,
+        `${API_BASE_URL}/tasks/${taskId}`,
         updatedTask
       );
       setTasks((prev) =>
@@ -95,7 +97,7 @@ function App() {
         console.error("エラー: タスクIDが取得できません");
         return;
       }
-      await axios.delete(`http://localhost:4000/tasks/${taskId}`);
+      await axios.delete(`${API_BASE_URL}/tasks/${taskId}`);
       setTasks((prev) => prev.filter((_, index) => index !== taskIndex));
     } catch (err) {
       console.error("タスクの削除に失敗：", err.message);
@@ -116,7 +118,7 @@ function App() {
       );
 
       const updatedTask = { ...task, completed: true, understanding: rating };
-      await axios.put(`http://localhost:4000/tasks/${task._id}`, updatedTask);
+      await axios.put(`${API_BASE_URL}/tasks/${task._id}`, updatedTask);
 
       let subjectId = task.subjectId;
       if (subjectId && typeof subjectId === "object") {
@@ -125,7 +127,7 @@ function App() {
 
       if (subjectId && typeof subjectId === "string") {
         const res = await axios.put(
-          `http://localhost:4000/subjects/${subjectId}/increase-xp`,
+          `${API_BASE_URL}/subjects/${subjectId}/increase-xp`,
           {
             increment: xpIncrement,
           }
@@ -150,10 +152,7 @@ function App() {
 
   const editSubject = async (subjectId, updatedSubject) => {
     try {
-      await axios.put(
-        `http://localhost:4000/subjects/${subjectId}`,
-        updatedSubject
-      );
+      await axios.put(`${API_BASE_URL}/subjects/${subjectId}`, updatedSubject);
       const newSubjects = subjects.map((subject) =>
         subject._id === subjectId ? { ...subject, ...updatedSubject } : subject
       );
@@ -166,10 +165,10 @@ function App() {
   const deleteSubject = async (subjectId) => {
     try {
       // **教科に紐づいたタスクの削除**
-      await axios.delete(`http://localhost:4000/tasks/by-subject/${subjectId}`);
+      await axios.delete(`${API_BASE_URL}/tasks/by-subject/${subjectId}`);
 
       // **教科の削除**
-      await axios.delete(`http://localhost:4000/subjects/${subjectId}`);
+      await axios.delete(`${API_BASE_URL}/subjects/${subjectId}`);
 
       //削除後のデータ取得
       await fetchTasks();
