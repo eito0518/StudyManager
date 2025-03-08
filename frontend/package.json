@@ -6,6 +6,7 @@
     "axios": "^1.4.0",
     "cra-template": "1.2.0",
     "daisyui": "^4.12.23",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "react": "^19.0.0",
     "react-calendar": "^5.1.0",
