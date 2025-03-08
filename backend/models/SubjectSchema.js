@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 
+// Subjectスキーマを定義
 const SubjectSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true, //絶対書き込む
-      maxlength: 20, //文字制限 あまり長いと見づらいため
+      required: true,
+      maxlength: 20,
     },
     date: {
       type: Date,
@@ -15,10 +16,12 @@ const SubjectSchema = new mongoose.Schema(
     xp: {
       type: Number,
       required: true,
-      default: 0, //デフォルト値
+      default: 0,
     },
   },
-  { collection: "subjects" }
-); //コレクション名を明示
 
+  { collection: "subjects" }
+);
+
+// Subjectモデルを作成
 module.exports = mongoose.model("Subject", SubjectSchema);
