@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Taskスキーマを定義
 const TaskSchema = new mongoose.Schema(
   {
     description: {
@@ -11,7 +12,7 @@ const TaskSchema = new mongoose.Schema(
       required: true,
       min: 1,
       max: 5,
-      default: 0,
+      default: 1,
     },
     understanding: {
       type: Number,
@@ -21,12 +22,14 @@ const TaskSchema = new mongoose.Schema(
       default: 0,
     },
     subjectId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Subject",
+      type: mongoose.Schema.Types.ObjectId, // MongoDBのObjectID
+      ref: "Subject", // 参照するコレクションを指定 (Subjectモデルがsubjectsコレクションを自動で参照する)
       required: true,
     },
   },
+
   { collection: "tasks" }
 );
 
+// Taskモデルを作成
 module.exports = mongoose.model("Task", TaskSchema);

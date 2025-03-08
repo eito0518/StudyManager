@@ -9,7 +9,7 @@ router.post("/register", async (req, res) => {
       username: req.body.username,
       password: req.body.password,
     });
-    // ユーザー情報をデータベースに保存
+    // データベースに保存
     const user = await newUser.save();
     res.status(200).json(user);
   } catch (err) {
@@ -20,12 +20,13 @@ router.post("/register", async (req, res) => {
 // ログイン
 router.post("/login", async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.body.username }); // usernameでユーザーを検索
+    // usernameでユーザーを検索
+    const user = await User.findOne({ username: req.body.username });
     if (!user) {
       res.status(400).json("ユーザーが見つかりません");
     }
-
-    const validPassword = user.password === req.body.password; // 保存されているパスワードとの照合
+    // 保存されているパスワードと照合
+    const validPassword = user.password === req.body.password;
     if (!validPassword) {
       res.status(400).json("パスワードが違います");
     }
