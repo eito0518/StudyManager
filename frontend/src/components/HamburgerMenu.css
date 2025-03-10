@@ -16,8 +16,8 @@
   left: -600px; /* メニューが閉じているときの位置 */
   width: 600px; /* メニューの幅を広げる */
   height: 100%;
-  background-color: rgb(41, 41, 41);
-  box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+  background-color: #ccc;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
   z-index: 999;
   overflow-y: auto;
   padding: 20px;
@@ -78,7 +78,7 @@
 
 /*削除ボタンの設定*/
 .delete-button {
-  background-color: #E74C3C; /* ボタンの背景色を赤に設定 */
+  background-color: #e74c3c; /* ボタンの背景色を赤に設定 */
   color: rgb(27, 27, 27); /* ボタンの文字色を白に設定 */
   width: 80px; /* ボタンの幅を指定 */
   border: none; /* ボーダーを削除 */
@@ -88,5 +88,5 @@
 }
 
 .delete-button:hover {
-  background-color: #C0392B; /* ホバー時の背景色を変更 */
+  background-color: #c0392b; /* ホバー時の背景色を変更 */
 }

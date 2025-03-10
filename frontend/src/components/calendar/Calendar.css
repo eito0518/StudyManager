@@ -1,0 +1,133 @@
+/* カレンダーメニューの設定 */
+
+.hamburger-button-right {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 30px;
+}
+
+.menu-right {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 700px;
+  height: 100%;
+  background-color: #333;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  transform: translateX(100%); /* 要素自身の幅に対して100%分だけ右に移動 */
+  transition: transform 0.2s;
+}
+
+.menu-right.open-menu-right {
+  transform: translateX(0); /* 要素自身の幅に対して0%分だけ右に移動 */
+  z-index: 100; /* メニューを最前面に表示 */
+}
+
+.close-button-right {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 30px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+}
+
+.menu-content-right {
+  padding: 20px;
+}
+
+.calendar-container {
+  padding: 20px;
+}
+
+/* react-calendarの設定 */
+
+.calendar-title {
+  font-size: 20px; /* フォントサイズを変更 */
+  text-align: center; /* テキストを中央揃え */
+  color: rgb(240, 240, 240); /* テキストの色を変更 */
+  margin-bottom: 20px; /* タイトルとカレンダーの間に余白を追加 */
+}
+
+.react-calendar {
+  width: 100%;
+  height: 100%;
+  background-color: #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.react-calendar__tile {
+  height: 90px;
+  display: flex;
+  flex-direction: column; /* 縦方向に配置 */
+  align-items: flex-start; /* 左揃え */
+  justify-content: flex-start; /* 上揃え */
+}
+
+/* 各タイルの日付の設定 */
+.react-calendar__tile > abbr {
+  width: 100%;
+  font-size: 15px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column; /* 縦方向に配置 */
+  align-items: flex-start; /* 左揃え */
+  justify-content: flex-start; /* 上揃え */
+}
+
+.subjects {
+  width: 100%;
+  display: flex;
+  flex-direction: column; /* 縦方向に配置 */
+  align-items: flex-start; /* 左揃え */
+}
+
+.subject {
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap; /* テキストを1行で表示し改行を防ぐ */
+  overflow: hidden; /* テキストがはみ出た部分を非表示 */
+  text-overflow: ellipsis; /* テキストがはみ出た場合に省略記号を表示 */
+  padding: 1px 4px; /* 要素の内側の余白を設定 */
+  margin: 1px 1px; /* 要素の外側の余白を設定 */
+  line-height: 1; /* 行の高さを1倍に設定 */
+  color: rgb(20, 20, 20);
+  max-width: 100%;
+}
+
+/* 今日の日付の背景色 */
+.react-calendar__tile--now {
+  background: rgb(240, 240, 240) !important;
+  color: black !important;
+}
+
+/* 選択した日付の背景色 */
+.react-calendar__tile--active {
+  background: rgb(180, 180, 180) !important;
+  color: rgb(0, 0, 0) !important;
+}
+
+/* タイルのホバー時の背景色 */
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #ccc;
+}
+
+/* 土曜日だけ青色にする */
+.react-calendar
+  .react-calendar__month-view__days__day--weekend:nth-child(7n-1) {
+  color: #00f;
+}
+
+/* 土曜を全部青色にしても今月以外は灰色にする */
+.react-calendar .react-calendar__month-view__days__day--neighboringMonth {
+  color: #757575 !important;
+}

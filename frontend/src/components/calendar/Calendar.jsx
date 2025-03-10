@@ -3,7 +3,7 @@ import ReactCalendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./Calendar.css";
 
-const ReactCalendar = ({ subjects }) => {
+const Calendar = ({ subjects }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // カレンダーメニューの表示切り替え
