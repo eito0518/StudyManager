@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const Task = require("../models/TaskSchema");
 
-// タスク一覧取得
+// 全てのタスクを取得
 router.get("/", async (req, res) => {
   try {
     // 全てのタスク情報を取得し、populateメソッドでtaskに紐付いたsubject情報も取得

@@ -4,7 +4,7 @@ import axios from "axios";
 import HamburgerMenu from "./components/HamburgerMenu";
 import TaskCompletion from "./components/TaskCompletion";
 import TaskList from "./components/TaskList";
-import CalendarMenu from "./components/CalendarMenu";
+import Calendar from "./components/calendar/Calendar"; //　移行完了
 import LevelDisplay from "./components/LevelDisplay";
 import { v4 as uuidv4 } from "uuid";
 import "./App.css";
@@ -17,9 +17,12 @@ function App() {
   const [xp, setXP] = useState({});
   const [showAll, setShowAll] = useState(false);
 
+  // 全ての科目を取得
   const fetchSubjects = async () => {
     try {
+      // 全ての科目習得APIを叩く
       const res = await axios.get(`${API_BASE_URL}/subjects`);
+      // 取得したデータを格納
       setSubjects(res.data);
 
       const initialXp = res.data.reduce((acc, subject) => {
@@ -32,8 +35,10 @@ function App() {
     }
   };
 
+  // 全てのタスクを取得
   const fetchTasks = async () => {
     try {
+      // 全てのタスク取得APIを叩く
       const res = await axios.get(`${API_BASE_URL}/tasks`);
       setTasks(res.data);
     } catch (err) {
@@ -41,15 +46,16 @@ function App() {
     }
   };
 
+  // 初回レンダリング時に全ての科目とタスクを取得
   useEffect(() => {
     fetchSubjects();
     fetchTasks();
   }, []);
 
+  // 科目追加
   const addSubject = async (subject) => {
     try {
-      console.log("追加する科目：", subject);
-
+      // 新しい科目を作成APIを叩く
       const res = await axios.post(`${API_BASE_URL}/subjects`, {
         name: subject.name,
         date: subject.date || new Date().toISOString().split("T")[0],
@@ -60,9 +66,9 @@ function App() {
     }
   };
 
+  // タスク追加
   const addTask = async (subjectId, task) => {
     try {
-      console.log("追加するタスク:", { subjectId, ...task });
       const newTask = { ...task, subjectId };
       const res = await axios.post(`${API_BASE_URL}/tasks`, newTask);
       setTasks((prev) => [...prev, res.data]);
@@ -71,6 +77,7 @@ function App() {
     }
   };
 
+  // タスク更新
   const updateTask = async (taskIndex, updatedTask) => {
     try {
       const taskId = tasks[taskIndex]?._id;
@@ -90,6 +97,7 @@ function App() {
     }
   };
 
+  // タスク削除
   const deleteTask = async (taskIndex) => {
     try {
       const taskId = tasks[taskIndex]?._id;
@@ -104,6 +112,7 @@ function App() {
     }
   };
 
+  // タスク完了
   const completeTask = async (taskIndex, rating) => {
     try {
       const task = tasks[taskIndex];
@@ -150,6 +159,7 @@ function App() {
     }
   };
 
+  // 科目編集
   const editSubject = async (subjectId, updatedSubject) => {
     try {
       await axios.put(`${API_BASE_URL}/subjects/${subjectId}`, updatedSubject);
@@ -162,6 +172,7 @@ function App() {
     }
   };
 
+  // 科目削除
   const deleteSubject = async (subjectId) => {
     try {
       // **教科に紐づいたタスクの削除**
@@ -225,7 +236,7 @@ function App() {
           />
         </Routes>
 
-        <CalendarMenu subjects={subjects} />
+        <Calendar subjects={subjects} />
 
         {/* レベル表示（横スクロール対応） */}
         <div className="level-display-container flex flex-wrap justify-center gap-4 p-4">
